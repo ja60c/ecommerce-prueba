@@ -1,3 +1,6 @@
+import firebaseApp from "./firebase";
+console.log(firebaseApp);
+
 function App() {
   return (
     <>
