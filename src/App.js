@@ -1,10 +1,12 @@
-import firebaseApp from "./firebase";
-console.log(firebaseApp);
+import { AuthProvider } from './context/authContext';
+import Signup from './components/Signup';
 
 function App() {
   return (
     <>
-    <h1>Hola!</h1>
+    <AuthProvider>
+    <Signup/>
+    </AuthProvider>
     </>
   );
 }
