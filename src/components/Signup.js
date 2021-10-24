@@ -7,21 +7,24 @@ function Singup() {
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
     const [ error, setError ] = useState('');
+    const [ loading, setLoading ] = useState('');
     const { currentUser, signup } = useAuth();
 
     async function handleSubmit(e){
         e.preventDefault();
 
         if(passwordRef.current.value !== confirmPasswordRef.current.value){
-            return setError('¡Passwords no coinciden!');
+            return setError('¡Las contraseñas no coinciden!');
         }
 
         try {
             setError('')
+            setLoading(true)
             await signup(emailRef.current.value, passwordRef.current.value)
             console.log(currentUser);
         } catch (e) {
             setError('Error al crear usuario: ' + e.message)
+            setLoading(false)
             console.log(e);
         }
     }
@@ -30,8 +33,7 @@ function Singup() {
         <Card className="w-75 mx-auto mt-5">
             <Card.Body>
                 <h1>Sign Up</h1>
-                { error ? <Alert variant="danger">{error}</Alert> : '' }
-                { currentUser ? <Alert variant="success">{ currentUser.email }</Alert> : '' }
+                { error && error !== '' && <Alert variant="danger">{error}</Alert> }
                 <Form onSubmit={ handleSubmit }>
                     <Form.Group className="mb-3" controlId="formEmail">
                         <Form.Label>Email address</Form.Label>
@@ -48,7 +50,7 @@ function Singup() {
                         <Form.Control ref={ confirmPasswordRef } type="password" placeholder="Confirm password" autoComplete="off" required />
                     </Form.Group>
 
-                    <Button className="w-100" variant="primary" type="submit">
+                    <Button className="w-100" variant="primary" type="submit" disabled={ loading }>
                         Signup 
                     </Button>
                 </Form>
