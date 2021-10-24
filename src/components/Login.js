@@ -4,7 +4,7 @@ import { useAuth } from '../context/authContext';
 import { Link, useHistory } from 'react-router-dom';
 
 
-function Signup() {
+function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
     const confirmPasswordRef = useRef();
@@ -15,10 +15,6 @@ function Signup() {
 
     async function handleSubmit(e){
         e.preventDefault();
-
-        if(passwordRef.current.value !== confirmPasswordRef.current.value){
-            return setError('¡Las contraseñas no coinciden!');
-        }
 
         try {
             setError('')
@@ -35,7 +31,7 @@ function Signup() {
     return (
         <Card className="w-75 mx-auto mt-5">
             <Card.Body>
-                <h1>Sign Up</h1>
+                <h1>Login</h1>
                 { error && error !== '' && <Alert variant="danger">{error}</Alert> }
                 <Form onSubmit={ handleSubmit }>
                     <Form.Group className="mb-3" controlId="formEmail">
@@ -48,21 +44,16 @@ function Signup() {
                         <Form.Control ref={ passwordRef } type="password" placeholder="Password" autoComplete="off" required />
                     </Form.Group>
 
-                    <Form.Group className="mb-3" controlId="formConfirmPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control ref={ confirmPasswordRef } type="password" placeholder="Confirm password" autoComplete="off" required />
-                    </Form.Group>
-
                     <Button className="w-100" variant="primary" type="submit" disabled={ loading }>
-                        Signup 
+                        Login 
                     </Button>
                 </Form>
                 <Card.Text className="text-muted text-center my-3">
-                    Inicia sesión <Link to="/login">aquí</Link>
+                    ¿Necesitas una cuenta? <Link to="/signup">Regístrate aquí</Link>
                 </Card.Text>
             </Card.Body>
         </Card>
     )
 }
 
-export default Signup;
+export default Login;
