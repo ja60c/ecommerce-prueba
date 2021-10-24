@@ -4,13 +4,12 @@ import { useAuth } from '../context/authContext';
 import { Link, useHistory } from 'react-router-dom';
 
 
-function Login() {
+function ForgotPassword() {
     const emailRef = useRef();
-    const passwordRef = useRef();
+    const { resetPassword } = useAuth();
     const [ error, setError ] = useState('');
+    const [ message, setMessage ] = useState('');
     const [ loading, setLoading ] = useState('');
-    const { login } = useAuth();
-    const history = useHistory();
 
     async function handleSubmit(e){
         e.preventDefault();
@@ -18,10 +17,11 @@ function Login() {
         try {
             setError('')
             setLoading(true)
-            await login(emailRef.current.value, passwordRef.current.value)
-            history.push('/')
+            await resetPassword(emailRef.current.value)
+            setMessage('Verifica tu correo para cambiar tu contraseña')
+            setLoading(false);
         } catch (e) {
-            setError('Error al iniciar sesión: ' + e.message)
+            setError('Error al cambiar contraseña: ' + e.message)
             setLoading(false)
             console.log(e);
         }
@@ -30,25 +30,20 @@ function Login() {
     return (
         <Card className="w-75 mx-auto mt-5">
             <Card.Body>
-                <h1>Login</h1>
-                { error && error !== '' && <Alert variant="danger">{error}</Alert> }
+                <h1 className="display-4 text-center my-3">Password Reset</h1>
+                { error && error !== '' && <Alert variant="danger">{ error }</Alert> }
+                { message && message !== '' && <Alert variant="success">{ message }</Alert> }
                 <Form onSubmit={ handleSubmit }>
                     <Form.Group className="mb-3" controlId="formEmail">
                         <Form.Label>Email address</Form.Label>
                         <Form.Control ref={ emailRef } type="email" placeholder="Enter email" autoComplete="off" required />
                     </Form.Group>
-
-                    <Form.Group className="mb-3" controlId="formPassword">
-                        <Form.Label>Password</Form.Label>
-                        <Form.Control ref={ passwordRef } type="password" placeholder="Password" autoComplete="off" required />
-                    </Form.Group>
-
                     <Button className="w-100" variant="primary" type="submit" disabled={ loading }>
-                        Login 
+                        Reset password 
                     </Button>
                 </Form>
                 <Card.Text className="text-muted text-center my-3">
-                <Link to="/forgot-password">¿Has olvidado tu contraseña?</Link>
+                    <Link to="/login">Inicia sesión</Link>
                 </Card.Text>
                 <Card.Text className="text-muted text-center my-3">
                     ¿Necesitas una cuenta? <Link to="/signup">Regístrate aquí</Link>
@@ -58,4 +53,4 @@ function Login() {
     )
 }
 
-export default Login;
+export default ForgotPassword;
