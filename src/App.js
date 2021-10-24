@@ -1,6 +1,8 @@
 import { AuthProvider } from './context/authContext';
 import Signup from './components/Signup';
 import Login from './components/Login';
+import Dashboard from './components/Dashboard';
+import PrivateRoute from './components/PrivateRoute';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 function App() {
@@ -8,7 +10,7 @@ function App() {
     <AuthProvider>
       <Router>
         <Switch>
-          <Route exact path="/" render={ () => 'Hola desde inicio!' }/>
+          <PrivateRoute exact path="/" component={ Dashboard }/>
           <Route path="/signup" component={ Signup }/>
           <Route path="/login" component={ Login }/>
         </Switch>
