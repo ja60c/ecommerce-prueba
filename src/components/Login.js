@@ -7,10 +7,9 @@ import { Link, useHistory } from 'react-router-dom';
 function Login() {
     const emailRef = useRef();
     const passwordRef = useRef();
-    const confirmPasswordRef = useRef();
     const [ error, setError ] = useState('');
     const [ loading, setLoading ] = useState('');
-    const { signup } = useAuth();
+    const { login } = useAuth();
     const history = useHistory();
 
     async function handleSubmit(e){
@@ -19,10 +18,10 @@ function Login() {
         try {
             setError('')
             setLoading(true)
-            await signup(emailRef.current.value, passwordRef.current.value)
-            history.push('/login')
+            await login(emailRef.current.value, passwordRef.current.value)
+            history.push('/')
         } catch (e) {
-            setError('Error al crear usuario: ' + e.message)
+            setError('Error al iniciar sesión: ' + e.message)
             setLoading(false)
             console.log(e);
         }
