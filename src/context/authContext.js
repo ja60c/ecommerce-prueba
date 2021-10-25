@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState, createContext } from "react";
-import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updateProfile } from "firebase/auth";
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, updatePassword, updateProfile } from "firebase/auth";
 import { firebaseApp } from '../firebase' 
 
 const authContext = createContext();
@@ -37,11 +37,16 @@ function AuthProvider({ children }) {
         return sendPasswordResetEmail(firebaseAuth, email)
     }
 
-    function updateUserProfile() {
-        return updateProfile(firebaseAuth.currentUser, {
-            displayName: "", 
-            photoURL: ""
-          });        
+    function updateUserPassword(password){
+        return updatePassword(firebaseAuth.currentUser, password)
+    }
+
+    function updateName(name) {
+        return updateProfile(firebaseAuth.currentUser, { displayName: name });        
+    }
+
+    function updatePhoto(url) {
+        return updateProfile(firebaseAuth.currentUser, { photoURL: url });        
     }
 
     const value = { 
@@ -50,8 +55,10 @@ function AuthProvider({ children }) {
         login, 
         logout, 
         resetPassword,
-        updateUserProfile 
-    }
+        updateUserPassword,
+        updateName,
+        updatePhoto 
+    };
 
     return (
         <authContext.Provider value={ value }>

@@ -1,35 +1,91 @@
 import { useRef, useState } from 'react';
-import { Alert, Button, Card, Form, InputGroup, Row, FormControl } from 'react-bootstrap';
+import { Alert, Button, Card, Form, Image, ProgressBar } from 'react-bootstrap';
 import { useAuth } from '../context/authContext';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import NavigationBar from './NavigationBar';
+import { firebaseStorage } from '../firebase';
 
 function UpdateProfile() {
-    const emailRef = useRef();
-    const passwordRef = useRef();
-    const confirmPasswordRef = useRef();
+    const newNameRef = useRef();
+    const newPhotoRef = useRef();
+    const newPasswordRef = useRef();
+    const confirmNewPasswordRef = useRef();
+    const { currentUser, updateName, updatePassword, updatePhoto } = useAuth();
     const [ error, setError ] = useState('');
+    const [ message, setMessage ] = useState('');
     const [ loading, setLoading ] = useState('');
-    const { signup } = useAuth();
-    const history = useHistory();
+    const [ photoSrc, setPhotoSrc ] = useState(currentUser.photoURL || '');
+    const [ fileUploadingProgress, setFileUploadingProgress ] = useState();
 
-    async function handleSubmit(e){
+    function handlePhoto(e) {
+        const file = e.target.files[0]
+    
+        if (file === undefined) {
+          e.target.value = '';
+          return setError('File not selected!');
+        }
+    
+        if (!file.name.match(/\.(jpg|jpeg|png)$/)) {
+          e.target.value = '';
+          return setError('Only jpg or png files!');
+        }
+    
+        if (file.size > 5000000) {
+          e.target.value = '';
+          return setError('File too big! Max size 5 MB');
+        }
+    
+        setError('');
+        setPhotoSrc(URL.createObjectURL(file));
+      }
+
+    function handleSubmit(e){
         e.preventDefault();
 
-        if(passwordRef.current.value !== confirmPasswordRef.current.value){
-            return setError('Passwords do not match');
+        setMessage('')
+        setError('');
+        setLoading(true);
+
+        if (newNameRef.current.value === '' && newPasswordRef.current.value === '' && !newPhotoRef.current.files[0] ) {
+        setMessage('Nothing to change!');
+        setLoading(false);
+        return;
         }
 
-        try {
-            setError('')
-            setLoading(true)
-            await signup(emailRef.current.value, passwordRef.current.value)
-            history.push('/login')
-        } catch (e) {
-            setError('Cannot create user: ' + e.message)
-            setLoading(false)
-            console.log(e);
+        if (newPasswordRef.current.value !== confirmNewPasswordRef.current.value) {
+        setError('Passwords do not match!');
+        setLoading(false);
+        return;
         }
+
+        const promises = [];
+
+        if (newNameRef.current.value !== '' && newNameRef.current.value !== currentUser.displayName) {
+        promises.push(updateName(newNameRef.current.value));
+        }
+
+        if (newPasswordRef.current.value !== '') {
+        promises.push(updatePassword(newPasswordRef.current.value));
+        }
+
+        Promise.all(promises)
+        .then(() => {
+            if (!newPhotoRef.current.files[0]) return setMessage('Profile updated!');
+            setLoading(true)
+            setMessage('Uploading photo...');
+            const uploadTask = firebaseStorage.ref(`users/${currentUser.uid}/photo`).put(newPhotoRef.current.files[0]);
+            uploadTask.on('state_changed',
+                snapshot => {
+                setFileUploadingProgress(Math.floor((snapshot.bytesTransferred / snapshot.totalBytes) * 100))
+                },
+                error => setError(error),
+                () => uploadTask.snapshot.ref.getDownloadURL()
+                        .then(url => updatePhoto(url))
+                        .then(() => setMessage('Profile updated!'))
+            );
+        })
+        .then(() => setLoading(false))
+        .catch(e => setError('' + e))
     }
 
     return (
@@ -38,29 +94,41 @@ function UpdateProfile() {
         <Card className="w-75 mx-auto mt-5">
             <Card.Body>
                 <h1 className="display-4 text-center my-3">Update profile</h1>
-                { error && error !== '' && <Alert variant="danger">{error}</Alert> }
+                { error && <Alert variant="danger">{error}</Alert> }
+                { message && <Alert variant="success">{message}</Alert> }
                 <Form onSubmit={ handleSubmit }>
-                    <Row>
-                        <Form.Label htmlFor="inlineFormInputGroup" srOnly>
-                            Username
-                        </Form.Label>
-                        <InputGroup className="mb-2">
-                            <InputGroup.Prepend>
-                            <InputGroup.Text>@</InputGroup.Text>
-                            </InputGroup.Prepend>
-                            <FormControl id="inlineFormInputGroup" placeholder="Username" />
-                        </InputGroup>
-                    </Row>
-                    <Row>
-                        <Form.Label htmlFor="inlineFormInputGroup" srOnly>
-                            Upload a profile image
-                        </Form.Label>
-                        <Form.Group>
-                            <Form.File id="select" />
-                        </Form.Group>
-                    </Row><br />
-                    <Button as={ Link } to="/" className="w-100" variant="primary" type="submit" disabled={ loading }>
-                            Update 
+                    <Form.Group className="mb-3" controlId="formName">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control type="text" placeholder={ currentUser.displayName ? currentUser.displayName : 'Enter your name' } ref={ newNameRef } autoComplete="off" />
+                    </Form.Group>
+                    {
+                    photoSrc && <div style={{ width: '200px', height: '200px', margin: '0 auto'}}>
+                        <Image style={{ objectFit: 'cover', objectPosition: 'center'}} className="w-100 h-100 border border-2 border-secondary p-1" src={ photoSrc } roundedCircle />
+                        </div>
+                    }
+
+                    <Form.Group className="mb-3" controlId="formPhoto">
+                    <Form.Label>Profile photo</Form.Label>
+                    <Form.Control type="file" ref={ newPhotoRef } onChange={ handlePhoto } disabled={ loading } />
+                    {
+                        fileUploadingProgress && fileUploadingProgress !== 100
+                        ? <ProgressBar animated now={fileUploadingProgress} label={`${fileUploadingProgress}%`} />
+                        : ''
+                    }
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formPassword">
+                    <Form.Label>Password</Form.Label>
+                    <Form.Control type="password" placeholder="Leave blank to keep the same" ref={ newPasswordRef } autoComplete="off" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formConfirmPassword">
+                    <Form.Label>Confirm password</Form.Label>
+                    <Form.Control type="password" placeholder="Password" ref={ confirmNewPasswordRef } autoComplete="off" />
+                    </Form.Group>
+
+                    <Button className="w-100" variant="primary" type="submit" disabled={ loading }>
+                    Update
                     </Button>
                     <Card.Text className="text-muted text-center my-3">
                         <Link to="/profile">Back to profile</Link>
