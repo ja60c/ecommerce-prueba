@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Alert, Button, Card, Form } from 'react-bootstrap';
 import { useAuth } from '../context/authContext';
 import { Link, useHistory } from 'react-router-dom';
-
+import NavigationBar from './NavigationBar';
 
 function Signup() {
     const emailRef = useRef();
@@ -17,7 +17,7 @@ function Signup() {
         e.preventDefault();
 
         if(passwordRef.current.value !== confirmPasswordRef.current.value){
-            return setError('¡Las contraseñas no coinciden!');
+            return setError('Passwords do not match');
         }
 
         try {
@@ -26,16 +26,18 @@ function Signup() {
             await signup(emailRef.current.value, passwordRef.current.value)
             history.push('/login')
         } catch (e) {
-            setError('Error al crear usuario: ' + e.message)
+            setError('Cannot create user: ' + e.message)
             setLoading(false)
             console.log(e);
         }
     }
 
     return (
+        <>
+        <NavigationBar />
         <Card className="w-75 mx-auto mt-5">
             <Card.Body>
-                <h1>Sign Up</h1>
+                <h1 className="display-4 text-center my-3">Sign Up</h1>
                 { error && error !== '' && <Alert variant="danger">{error}</Alert> }
                 <Form onSubmit={ handleSubmit }>
                     <Form.Group className="mb-3" controlId="formEmail">
@@ -58,10 +60,11 @@ function Signup() {
                     </Button>
                 </Form>
                 <Card.Text className="text-muted text-center my-3">
-                    Inicia sesión <Link to="/login">aquí</Link>
+                    <Link to="/login">Login</Link>
                 </Card.Text>
             </Card.Body>
         </Card>
+        </>
     )
 }
 

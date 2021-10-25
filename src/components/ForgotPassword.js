@@ -1,8 +1,8 @@
 import { useRef, useState } from 'react';
 import { Alert, Button, Card, Form } from 'react-bootstrap';
 import { useAuth } from '../context/authContext';
-import { Link, useHistory } from 'react-router-dom';
-
+import { Link } from 'react-router-dom';
+import NavigationBar from './NavigationBar';
 
 function ForgotPassword() {
     const emailRef = useRef();
@@ -18,16 +18,18 @@ function ForgotPassword() {
             setError('')
             setLoading(true)
             await resetPassword(emailRef.current.value)
-            setMessage('Verifica tu correo para cambiar tu contraseña')
+            setMessage('Check your email to change your password')
             setLoading(false);
         } catch (e) {
-            setError('Error al cambiar contraseña: ' + e.message)
+            setError('Cannot change password: ' + e.message)
             setLoading(false)
             console.log(e);
         }
     }
 
     return (
+        <>
+        <NavigationBar />
         <Card className="w-75 mx-auto mt-5">
             <Card.Body>
                 <h1 className="display-4 text-center my-3">Password Reset</h1>
@@ -43,13 +45,14 @@ function ForgotPassword() {
                     </Button>
                 </Form>
                 <Card.Text className="text-muted text-center my-3">
-                    <Link to="/login">Inicia sesión</Link>
+                    <Link to="/login">Login</Link>
                 </Card.Text>
                 <Card.Text className="text-muted text-center my-3">
-                    ¿Necesitas una cuenta? <Link to="/signup">Regístrate aquí</Link>
+                    Need an account? <Link to="/signup">Signup</Link>
                 </Card.Text>
             </Card.Body>
         </Card>
+        </>
     )
 }
 
