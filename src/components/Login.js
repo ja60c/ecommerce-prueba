@@ -2,7 +2,7 @@ import { useRef, useState } from 'react';
 import { Alert, Button, Card, Form } from 'react-bootstrap';
 import { useAuth } from '../context/authContext';
 import { Link, useHistory } from 'react-router-dom';
-
+import NavigationBar from './NavigationBar';
 
 function Login() {
     const emailRef = useRef();
@@ -21,16 +21,18 @@ function Login() {
             await login(emailRef.current.value, passwordRef.current.value)
             history.push('/')
         } catch (e) {
-            setError('Error al iniciar sesión: ' + e.message)
+            setError('Error: ' + e.message)
             setLoading(false)
             console.log(e);
         }
     }
 
     return (
+        <>
+        <NavigationBar />
         <Card className="w-75 mx-auto mt-5">
             <Card.Body>
-                <h1>Login</h1>
+                <h1 className="display-4 text-center my-3">Login</h1>
                 { error && error !== '' && <Alert variant="danger">{error}</Alert> }
                 <Form onSubmit={ handleSubmit }>
                     <Form.Group className="mb-3" controlId="formEmail">
@@ -48,13 +50,14 @@ function Login() {
                     </Button>
                 </Form>
                 <Card.Text className="text-muted text-center my-3">
-                <Link to="/forgot-password">¿Has olvidado tu contraseña?</Link>
+                <Link to="/forgot-password">I forgot my password</Link>
                 </Card.Text>
                 <Card.Text className="text-muted text-center my-3">
-                    ¿Necesitas una cuenta? <Link to="/signup">Regístrate aquí</Link>
+                    Need an account? <Link to="/signup">Signup</Link>
                 </Card.Text>
             </Card.Body>
         </Card>
+        </>
     )
 }
 
