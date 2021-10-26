@@ -22,17 +22,17 @@ function UpdateProfile() {
     
         if (file === undefined) {
           e.target.value = '';
-          return setError('File not selected!');
+          return setError('File not selected.');
         }
     
         if (!file.name.match(/\.(jpg|jpeg|png)$/)) {
           e.target.value = '';
-          return setError('Only jpg or png files!');
+          return setError('Only jpg or png files.');
         }
     
         if (file.size > 5000000) {
           e.target.value = '';
-          return setError('File too big! Max size 5 MB');
+          return setError('File too big. Max size 5 MB.');
         }
     
         setError('');
@@ -47,13 +47,13 @@ function UpdateProfile() {
         setLoading(true);
 
         if (newNameRef.current.value === '' && newPasswordRef.current.value === '' && !newPhotoRef.current.files[0] ) {
-        setMessage('Nothing to change!');
+        setMessage('Nothing to change');
         setLoading(false);
         return;
         }
 
         if (newPasswordRef.current.value !== confirmNewPasswordRef.current.value) {
-        setError('Passwords do not match!');
+        setError('Passwords do not match');
         setLoading(false);
         return;
         }
@@ -81,7 +81,7 @@ function UpdateProfile() {
                 error => setError(error),
                 () => uploadTask.snapshot.ref.getDownloadURL()
                         .then(url => updatePhoto(url))
-                        .then(() => setMessage('Profile updated!'))
+                        .then(() => setMessage('Profile updated'))
             );
         })
         .then(() => setLoading(false))
@@ -124,7 +124,7 @@ function UpdateProfile() {
 
                     <Form.Group className="mb-3" controlId="formConfirmPassword">
                     <Form.Label>Confirm password</Form.Label>
-                    <Form.Control type="password" placeholder="Password" ref={ confirmNewPasswordRef } autoComplete="off" />
+                    <Form.Control type="password" placeholder="Leave blank to keep the same" ref={ confirmNewPasswordRef } autoComplete="off" />
                     </Form.Group>
 
                     <Button className="w-100" variant="primary" type="submit" disabled={ loading }>
