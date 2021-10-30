@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Image, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Button, Card, Modal, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/authContext';
 import { Link } from 'react-router-dom';
@@ -7,7 +7,6 @@ import axios from 'axios';
 
 function CardModal(props) {
     const { currentUser } = useAuth();
-    const { image, product, description, price, category } = props;
     // Hooks para el Modal
     const [show, setShow] = useState(false);
     const handleShow = () => setShow(true);
