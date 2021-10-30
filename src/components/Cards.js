@@ -1,10 +1,7 @@
-import { Card, Button } from 'react-bootstrap';
-import { useAuth } from '../context/authContext';
-import { Link } from 'react-router-dom';
+import { Card } from 'react-bootstrap';
 import CardModal from './CardModal';
 
 function Cards(props) {
-    const { currentUser } = useAuth();
     const { product, description, image } = props;
 
     return (

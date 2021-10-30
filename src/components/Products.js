@@ -38,8 +38,7 @@ function Products(props) {
                 {products.map(product => {
                     return (
                         <div className="display-flex">
-                        {/* <Pagination />
-                        <Modal /> */}
+                        {/* <Pagination /> */}
                         <Cards 
                             // products={currentProducts}
                             product={ product.product_name } 
