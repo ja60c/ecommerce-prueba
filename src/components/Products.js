@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Spinner } from 'react-bootstrap';
 import NavigationBar from './NavigationBar';
 import Cards from './Cards';
+// import Pagination from './Pagination'
 
 function Products(props) {
-    const [products,setProducts] = useState([])
-
+    const [products, setProducts] = useState([])
+    // Mandando llamar API
     useEffect(() => {
-        // const getProducts = () => {
             const URL_API_ECOMMERCE = 'https://ecomerce-master.herokuapp.com/api/v1/item';
             axios
                 .get(URL_API_ECOMMERCE)
@@ -16,27 +17,39 @@ function Products(props) {
             })
             .catch(error => console.log(error))
     }, []);
+
+    // Pagination 
+    // const indexOfLastProduct = currentPage * productsPerPage;
+    // const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    // const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
     
-    // useEffect(() => getProducts(), []);
     const renderProducts = () => {
         if (products.length === 0) {
-            return <h2>Loading products...</h2>
+            return <div style= {{ margin: '1rem' }} >
+            <Spinner animation="border" variant="primary" role="status" /> 
+            <h4>Loading products...</h4>
+            </div>
         } 
         return (
             <>
-                <NavigationBar />
-                <h2>There are { products.length} products</h2>
-                <div>
-                    {products.map(product => {
-                        return (
-                            <Cards 
-                                product={ product.product_name } 
-                                description={ product.description } 
-                                image={ product.image} 
-                            />
-                        );
-                    })}
-                </div>
+            <NavigationBar />
+            <h4 style= {{ marginTop: '1rem', marginLeft: '3rem' }}>There are { products.length} products</h4>
+            <div className="products-container">
+                {products.map(product => {
+                    return (
+                        <div className="display-flex">
+                        {/* <Pagination />
+                        <Modal /> */}
+                        <Cards 
+                            // products={currentProducts}
+                            product={ product.product_name } 
+                            description={ product.description } 
+                            image={ product.image} 
+                        />
+                        </div>
+                    );
+                })}
+            </div>
             </>
         );
     } 
@@ -49,17 +62,5 @@ function Products(props) {
         </>
     );
 }
-
-    // return (
-    //     <>
-    //     <h1 className="display-6 text-center m-3">Aquí van los productos</h1>
-    //     {/* <Cards 
-    //         product='Una estaca'
-    //         description='Este es la descripción de mi producto'
-    //         image='https://www.aconstructoras.com/images/estacasDeMaderaDe300mmDeLargo30x30mmgruesoConPunta.jpg'
-    //     /> */}
-    //     </>
-    // )
-// }
 
 export default Products; 
