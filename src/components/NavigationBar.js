@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, Container, Form, FormControl, Image, Nav, Navbar  } from 'react-bootstrap';
+import { Button, Container, Form, FormControl, Nav, Navbar  } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../context/authContext';
 
@@ -23,15 +23,26 @@ function NavigationBar() {
     }
 
     return (
-        <Navbar bg="primary" variant="dark" expand="md">
+        <Navbar className="navbar" variant="dark" expand="lg">
         <Container>
-            <Navbar.Brand>Magic Box Store 🔮</Navbar.Brand>
+            <Navbar.Brand className="nav-brand" as={ Link } to="/">Magic Box Store 🔮</Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
             <Nav.Link as={ Link } to="/">Products</Nav.Link>
             </Nav>
+            
             <Nav className="ms-auto">
+            <Form className="d-flex" style={{ marginRight:'1rem', maxWidth: '15rem' }}>
+                <FormControl
+                type="search"
+                placeholder="Search"
+                size="sm"
+                aria-label="Search"
+                />
+                <Button variant="outline-light" size="sm" >Search</Button>
+            </Form>
+
             { 
                 currentUser
                 ? <Navbar.Text className="">Hello, <Link to="/profile">{currentUser.displayName}</Link>!</Navbar.Text>
@@ -48,15 +59,6 @@ function NavigationBar() {
                 : <Nav.Link as={ Link } to="/signup">Signup</Nav.Link>
             }     
             </Nav>
-            <Form className="d-flex vw-20">
-                <FormControl
-                type="search"
-                placeholder="Search"
-                className="me-auto"
-                aria-label="Search"
-                />
-                <Button variant="outline-success">Search</Button>
-            </Form>
             </Navbar.Collapse>
         </Container>
         </Navbar>

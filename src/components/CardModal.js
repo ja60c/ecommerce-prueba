@@ -27,7 +27,7 @@ function CardModal(props) {
 
     return (
         <>
-        <Button size="sm" className="me-auto" onClick={handleShow}>Details</Button>
+        <Button size="sm" className="details-button" onClick={handleShow}>Details</Button>
         <Modal show={show} onHide={ handleClose } centered>
             <Modal.Header closeButton><span style={{ fontWeight:'bold'}} >{ products.product_name }</span></Modal.Header>
             <Modal.Body>

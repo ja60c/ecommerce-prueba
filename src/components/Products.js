@@ -3,6 +3,7 @@ import axios from 'axios';
 import { Spinner } from 'react-bootstrap';
 import NavigationBar from './NavigationBar';
 import Cards from './Cards';
+import Carrousel from './Carrousel';
 // import Pagination from './Pagination'
 
 function Products(props) {
@@ -33,6 +34,7 @@ function Products(props) {
         return (
             <>
             <NavigationBar />
+            <Carrousel />
             <h4 style= {{ marginTop: '1rem', marginLeft: '3rem' }}>There are { products.length} products</h4>
             <div className="products-container">
                 {products.map(product => {
