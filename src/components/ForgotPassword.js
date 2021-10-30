@@ -45,9 +45,9 @@ function ForgotPassword() {
                     </Button>
                 </Form>
                 <Card.Text className="text-muted text-center my-3">
-                    <Link to="/login">Login</Link>
+                    <Link style={{ fontSize: "14px" }}  to="/login">Login</Link>
                 </Card.Text>
-                <Card.Text className="text-muted text-center my-3">
+                <Card.Text style={{ fontSize: "14px" }} className="text-muted text-center my-3">
                     Need an account? <Link to="/signup">Signup</Link>
                 </Card.Text>
             </Card.Body>

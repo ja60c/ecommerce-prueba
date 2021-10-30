@@ -1,0 +1,35 @@
+.card-products {
+    width: 13rem; 
+    margin: .5rem;
+    /* padding: .5rem;  */
+}
+
+.card-image{
+    width: 13rem;
+    height: 13rem;
+}
+
+.card-title {
+    font-size: 13px;
+}
+
+.card-text {
+    font-size: 10px;
+    /* margin-bottom: 0; */
+}
+
+
+.display-flex{
+    /* background-color: lightcoral; */
+    display: inline-block;
+}
+
+.products-container {
+    /* background-color: red; */
+    padding-left: 3rem;
+    padding-right: 3rem;
+}
+
+.card-button {
+    margin-left: 1rem;
+}

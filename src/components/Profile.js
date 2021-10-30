@@ -49,7 +49,7 @@ function Profile() {
                         Update profile 
                 </Button>
                 <Card.Text className="text-muted text-center my-3">
-                    <Link to="/login" onClick={ handleLogout }>Logout</Link>
+                    <Link style={{ fontSize: "14px" }} to="/login" onClick={ handleLogout }>Logout</Link>
                 </Card.Text>
             </Card.Body>
         </Card>

@@ -60,7 +60,7 @@ function Signup() {
                     </Button>
                 </Form>
                 <Card.Text className="text-muted text-center my-3">
-                    <Link to="/login">Login</Link>
+                    <Link style={{ fontSize: "14px" }} to="/login">Login</Link>
                 </Card.Text>
             </Card.Body>
         </Card>

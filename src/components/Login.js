@@ -50,9 +50,9 @@ function Login() {
                     </Button>
                 </Form>
                 <Card.Text className="text-muted text-center my-3">
-                <Link to="/forgot-password">I forgot my password</Link>
+                <Link style={{ fontSize: "14px" }} to="/forgot-password">I forgot my password</Link>
                 </Card.Text>
-                <Card.Text className="text-muted text-center my-3">
+                <Card.Text style={{ fontSize: "14px" }} className="text-muted text-center my-3">
                     Need an account? <Link to="/signup">Signup</Link>
                 </Card.Text>
             </Card.Body>

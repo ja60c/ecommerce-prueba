@@ -7,10 +7,11 @@ import { firebaseStorage } from '../firebase';
 
 function UpdateProfile() {
     const newNameRef = useRef();
+    const newEmailRef = useRef();
     const newPhotoRef = useRef();
     const newPasswordRef = useRef();
     const confirmNewPasswordRef = useRef();
-    const { currentUser, updateName, updatePassword, updatePhoto } = useAuth();
+    const { currentUser, updateName, updateEmail, updatePassword, updatePhoto } = useAuth();
     const [ error, setError ] = useState('');
     const [ message, setMessage ] = useState('');
     const [ loading, setLoading ] = useState('');
@@ -61,7 +62,11 @@ function UpdateProfile() {
         const promises = [];
 
         if (newNameRef.current.value !== '' && newNameRef.current.value !== currentUser.displayName) {
-        promises.push(updateName(newNameRef.current.value));
+            promises.push(updateName(newNameRef.current.value));
+        }
+
+        if (newEmailRef.current.value !== '' && newEmailRef.current.value !== currentUser.email) {
+            promises.push(updateEmail(newEmailRef.current.value));
         }
 
         if (newPasswordRef.current.value !== '') {
@@ -88,6 +93,7 @@ function UpdateProfile() {
         .catch(e => setError('' + e))
     }
 
+
     return (
         <>
         <NavigationBar />
@@ -97,16 +103,11 @@ function UpdateProfile() {
                 { error && <Alert variant="danger">{error}</Alert> }
                 { message && <Alert variant="success">{message}</Alert> }
                 <Form onSubmit={ handleSubmit }>
-                    <Form.Group className="mb-3" controlId="formName">
-                        <Form.Label>Name</Form.Label>
-                        <Form.Control type="text" placeholder={ currentUser.displayName ? currentUser.displayName : 'Enter your name' } ref={ newNameRef } autoComplete="off" />
-                    </Form.Group>
                     {
-                    photoSrc && <div style={{ width: '200px', height: '200px', margin: '0 auto'}}>
+                        photoSrc && <div style={{ width: '200px', height: '200px', margin: '0 auto'}}>
                         <Image style={{ objectFit: 'cover', objectPosition: 'center'}} className="w-100 h-100 border border-2 border-secondary p-1" src={ photoSrc } roundedCircle />
                         </div>
                     }
-
                     <Form.Group className="mb-3" controlId="formPhoto">
                     <Form.Label>Profile photo</Form.Label>
                     <Form.Control type="file" ref={ newPhotoRef } onChange={ handlePhoto } disabled={ loading } />
@@ -116,6 +117,17 @@ function UpdateProfile() {
                         : ''
                     }
                     </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formName">
+                        <Form.Label>Name</Form.Label>
+                        <Form.Control type="text" placeholder={ currentUser.displayName ? currentUser.displayName : 'Enter your name' } ref={ newNameRef } autoComplete="off" />
+                    </Form.Group>
+
+                    <Form.Group className="mb-3" controlId="formEmail">
+                        <Form.Label>Email address</Form.Label>
+                        <Form.Control type="email" placeholder={ currentUser.email } ref={ newEmailRef } autoComplete="off" />
+                    </Form.Group>
+                    
 
                     <Form.Group className="mb-3" controlId="formPassword">
                     <Form.Label>Password</Form.Label>
@@ -131,7 +143,7 @@ function UpdateProfile() {
                     Update
                     </Button>
                     <Card.Text className="text-muted text-center my-3">
-                        <Link to="/profile">Back to profile</Link>
+                        <Link style={{ fontSize: "14px" }} to="/profile">Back to profile</Link>
                     </Card.Text>
                 </Form>
             </Card.Body>
